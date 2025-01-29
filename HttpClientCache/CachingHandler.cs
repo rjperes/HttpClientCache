@@ -49,6 +49,13 @@ namespace HttpClientCache
                     _cache.Set(request.RequestUri!, res, DateTimeOffset.Now.Add(_duration));
                     _logger.LogInformation($"Adding response for {request.RequestUri} to cache for {_duration}");
                 }
+                else if (request.Method == HttpMethod.Post || request.Method == HttpMethod.Put || request.Method == HttpMethod.Delete || request.Method == HttpMethod.Patch)
+                {
+                    _cache.Remove(request.RequestUri!);
+
+                    _logger.LogInformation($"Invalidating cache for {request.RequestUri}, method {request.Method}");
+
+                }
                 else
                 {
                     _logger.LogInformation($"Skipping cache for {request.Method} method"); 
